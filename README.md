@@ -1,6 +1,6 @@
 # model
 
-Database model
+Create models of database tables.
 
 ## Getting Started
 
