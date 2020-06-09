@@ -1,5 +1,5 @@
 name: model
-version: 0.0.1
+version: 0.0.2
 description: Manage database easier. Use models to represent rows of database.
   Create database structure using object-oriented dart and leave all SQL strings hidden.
 homepage: https://github.com/romanstrazanec/model
