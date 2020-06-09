@@ -1,22 +1,17 @@
-library model;
-
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import 'column.dart';
 import 'model.dart';
 
-/// Acts as a singleton. There is [dbProvider] instance to use.
 abstract class DBProvider with ChangeNotifier {
   static Database _db;
 
-  /// Database name.
-  String get name;
+  String get databaseName;
 
-  /// Database version
-  int get version;
+  int get databaseVersion;
 
-  /// Tables in database.
   Map<String, List<Column>> get tables;
 
   Future<T> Function<T>(Future<T> Function(Transaction), {bool exclusive})
@@ -29,11 +24,11 @@ abstract class DBProvider with ChangeNotifier {
     final dbPath = await getDatabasesPath();
     _db ??= await openDatabase(
       // Open only if _db null.
-      join(dbPath, name, '.db'),
-      version: version,
+      join(dbPath, databaseName, '.db'),
+      version: databaseVersion,
       onCreate: (db, _) async {
         await db.execute('PRAGMA foreign_keys = ON');
-        tables.forEach((name, cols) => DBHelper.createTable(db, name, cols));
+        tables.forEach((name, cols) => _createTable(db, name, cols));
       },
       onUpgrade: _onVersionChange,
       onDowngrade: _onVersionChange,
@@ -44,8 +39,8 @@ abstract class DBProvider with ChangeNotifier {
 
   void _onVersionChange(Database db, int oldVersion, int newVersion) {
     tables.forEach((name, cols) {
-      DBHelper.dropTable(db, name);
-      DBHelper.createTable(db, name, cols);
+      _dropTable(db, name);
+      _createTable(db, name, cols);
     });
   }
 
@@ -91,12 +86,10 @@ abstract class DBProvider with ChangeNotifier {
     print('\n${table.toUpperCase()}:');
     (await _db.transaction((txn) => txn.query(table))).forEach((e) => print(e));
   }
-}
 
-abstract class DBHelper {
   /// Executes SQL query to create table with [table] in [db] database.
   /// [Columns] must not contain [MetaModel.id] key.
-  static void createTable(
+  static void _createTable(
       Database db, String table, List<Column> columns) async {
     String sql = 'CREATE TABLE $table (${MetaModel.id} INTEGER PRIMARY KEY';
 
@@ -111,65 +104,10 @@ abstract class DBHelper {
     db.execute('$sql);').catchError((_) {});
   }
 
-  static void dropTable(Database db, String table) async {
+  static void _dropTable(Database db, String table) async {
     db.execute('DROP TABLE $table;').catchError((_) {});
   }
 
   static String columnIn(String column, List vals) =>
       '$column IN (${vals.map((_) => '?').join(', ')})';
 }
-
-class Column {
-  final String name;
-  final SQLiteType type;
-  final List<Constraint> constraints;
-
-  const Column(this.name, this.type, this.constraints);
-}
-
-abstract class Constraint {
-  const Constraint();
-}
-
-class Default extends Constraint {
-  final value;
-
-  const Default(this.value);
-
-  @override
-  String toString() => 'DEFAULT $value';
-}
-
-class Unique extends Constraint {
-  const Unique();
-
-  @override
-  String toString() => 'UNIQUE';
-}
-
-class NotNull extends Constraint {
-  const NotNull();
-
-  @override
-  String toString() => 'NOT NULL';
-}
-
-class Check extends Constraint {
-  final String condition;
-
-  const Check(this.condition);
-
-  @override
-  String toString() => 'CHECK($condition)';
-}
-
-class References extends Constraint {
-  final String table;
-
-  const References(this.table);
-
-  @override
-  String toString() => 'REFERENCES $table(${MetaModel.id})';
-}
-
-enum SQLiteType { integer, real, text, blob }
