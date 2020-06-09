@@ -1,7 +1,11 @@
+import 'model.dart';
+
+/// Column constraint.
 abstract class Constraint {
   const Constraint();
 }
 
+/// Set default value to column.
 class Default extends Constraint {
   final value;
 
@@ -11,6 +15,7 @@ class Default extends Constraint {
   String toString() => 'DEFAULT $value';
 }
 
+/// Makes column unique.
 class Unique extends Constraint {
   const Unique();
 
@@ -18,6 +23,7 @@ class Unique extends Constraint {
   String toString() => 'UNIQUE';
 }
 
+/// Restricts NULL for column.
 class NotNull extends Constraint {
   const NotNull();
 
@@ -25,6 +31,7 @@ class NotNull extends Constraint {
   String toString() => 'NOT NULL';
 }
 
+/// Adds validation to column.
 class Check extends Constraint {
   final String condition;
 
@@ -34,12 +41,12 @@ class Check extends Constraint {
   String toString() => 'CHECK($condition)';
 }
 
+/// Makes column reference another table.
 class References extends Constraint {
   final String table;
-  final String primaryColumn;
 
-  const References(this.table, this.primaryColumn);
+  const References(this.table);
 
   @override
-  String toString() => 'REFERENCES $table($primaryColumn)';
+  String toString() => 'REFERENCES $table(${MetaModel.id})';
 }
