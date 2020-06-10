@@ -17,10 +17,10 @@ void main() async {
   await book.save();
 
   // Print tables.
-  dbProvider.queryTables();
+  dbProvider.printTables();
 
   book.delete();
 
   // Book should no longer exist.
-  dbProvider.queryTables();
+  dbProvider.printTables();
 }

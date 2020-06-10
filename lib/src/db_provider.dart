@@ -88,13 +88,13 @@ abstract class DBProvider with ChangeNotifier {
     }
   }
 
-  /// Query all tables in database.
-  void queryTables() async {
-    for (final table in tables.keys) await queryTable(table);
+  /// Print all tables in database.
+  void printTables() async {
+    for (final table in tables.keys) await printTable(table);
   }
 
-  /// Query table in database.
-  static Future<void> queryTable(String table) async {
+  /// Print table in database.
+  static Future<void> printTable(String table) async {
     print('\n${table.toUpperCase()}:');
     (await _db.transaction((txn) => txn.query(table))).forEach((e) => print(e));
   }
