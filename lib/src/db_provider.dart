@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -6,7 +5,7 @@ import 'column.dart';
 import 'model.dart';
 
 /// Provides database.
-abstract class DBProvider with ChangeNotifier {
+abstract class DBProvider {
   /// Database.
   static Database _db;
 
@@ -90,28 +89,34 @@ abstract class DBProvider with ChangeNotifier {
 
   /// Print all tables in database.
   void printTables() async {
-    for (final table in tables.keys) await printTable(table);
+    for (final table in tables.keys) {
+      await printTable(table);
+    }
   }
 
   /// Print table in database.
   static Future<void> printTable(String table) async {
     print('\n${table.toUpperCase()}:');
-    (await _db.transaction((txn) => txn.query(table))).forEach((e) => print(e));
+    (await _db.transaction((txn) => txn.query(table))).forEach(print);
   }
 
   /// Executes SQL query to create table with [table] in [db] database.
-  /// [Columns] must not contain [MetaModel.id] key.
+  /// [Column]s must not contain [MetaModel.id] key.
   static void _createTable(
-      Database db, String table, List<Column> columns) async {
-    String sql = 'CREATE TABLE $table (${MetaModel.id} INTEGER PRIMARY KEY';
+    Database db,
+    String table,
+    List<Column> columns,
+  ) async {
+    var sql = 'CREATE TABLE $table (${MetaModel.id} INTEGER PRIMARY KEY';
 
-    columns.forEach((column) {
-      sql +=
-          ', ${column.name} ${column.type.toString().split('.').last.toUpperCase()}';
-      column.constraints.forEach((constraint) {
+    for (final column in columns) {
+      final type = column.type.toString().split('.').last.toUpperCase();
+      sql += ', ${column.name} $type';
+
+      for (final constraint in column.constraints) {
         sql += ' $constraint';
-      });
-    });
+      }
+    }
 
     db.execute('$sql);').catchError((_) {});
   }
