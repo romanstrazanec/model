@@ -1,6 +1,92 @@
-import './author_model.dart';
-import './book_model.dart';
-import './db_provider.dart';
+import 'package:model/model.dart';
+
+// Create models Author and Book by extending Model class.
+//
+
+class Author extends Model {
+  static const table = 'author';
+  static const nameCol = 'name';
+
+  @override
+  String get tableName => table;
+
+  String name;
+
+  Author({this.name});
+
+  @override
+  Map<String, dynamic> toMapForDB() => {nameCol: name};
+}
+
+class Book extends Model {
+  static const table = 'book';
+  static const titleCol = 'title';
+  static const descriptionCol = 'description';
+  static const priceCol = 'price';
+  static const numberOfPagesCol = 'number_of_pages';
+  static const authorIdCol = 'author_id';
+
+  @override
+  String get tableName => table;
+
+  String title;
+  String description;
+  double price;
+  int numberOfPages;
+  int authorId;
+
+  Book({
+    this.title,
+    this.description,
+    this.price,
+    this.numberOfPages,
+    this.authorId,
+  });
+
+  @override
+  Map<String, dynamic> toMapForDB() => {
+        titleCol: title,
+        descriptionCol: description,
+        priceCol: price,
+        numberOfPagesCol: numberOfPages,
+        authorIdCol: authorId,
+      };
+}
+
+// Extend DBProvider class to provide database.
+
+class MyDBProvider extends DBProvider {
+  @override
+  String get databaseName => 'books';
+
+  @override
+  int get databaseVersion => 1;
+
+  @override
+  Map<String, List<Column>> get tables => {
+        Book.table: <Column>[
+          Column(Book.titleCol, SQLiteType.text, <Constraint>[
+            Unique(),
+            NotNull(),
+            Default(''),
+          ]),
+          Column(Book.descriptionCol, SQLiteType.text),
+          Column(Book.priceCol, SQLiteType.real),
+          Column(Book.numberOfPagesCol, SQLiteType.integer),
+          Column(Book.authorIdCol, SQLiteType.integer, <Constraint>[
+            References(Author.table),
+          ])
+        ],
+        Author.table: <Column>[
+          Column(Author.nameCol, SQLiteType.text, <Constraint>[
+            Unique(),
+            NotNull(),
+          ])
+        ],
+      };
+}
+
+// Main method shows the use of the provider together with the models.
 
 void main() async {
   final dbProvider = await MyDBProvider().open();
