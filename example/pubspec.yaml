@@ -1,0 +1,26 @@
+name: model_example
+description: Demonstrates how to use the model package.
+publish_to: none
+version: 0.0.1
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  model:
+    git:
+      url: git://github.com/romanstrazanec/model
+      path: model
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+
+dependency_overrides:
+  model:
+    path: ../
