@@ -19,4 +19,4 @@ jobs:
     - name: Run tests
       run: pub run test
     - name: Publish
-      run: pub publish
+      run: pub publish -f
