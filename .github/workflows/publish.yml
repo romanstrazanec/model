@@ -1,9 +1,7 @@
-name: Dart CI
+name: Publish
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
 jobs:
