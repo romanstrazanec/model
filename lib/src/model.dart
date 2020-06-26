@@ -5,8 +5,6 @@ abstract class MetaModel {
 }
 
 abstract class Model {
-  String get tableName;
-
   int id;
 
   Model();

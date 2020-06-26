@@ -56,7 +56,7 @@ abstract class DBProvider {
     if (model.id == null) {
       model.id = await _db.transaction(
         (txn) => txn.insert(
-          model.tableName,
+          model.runtimeType.toString(),
           model.toMapForDB(),
           conflictAlgorithm: ConflictAlgorithm.ignore,
         ),
@@ -65,7 +65,7 @@ abstract class DBProvider {
       // model.id != null means it is already in database.
       _db.transaction(
         (txn) => txn.update(
-          model.tableName,
+          model.runtimeType.toString(),
           model.toMapForDB(),
           conflictAlgorithm: ConflictAlgorithm.ignore,
         ),
@@ -78,7 +78,7 @@ abstract class DBProvider {
     if (model.id != null) {
       await _db.transaction(
         (txn) => txn.delete(
-          model.tableName,
+          model.runtimeType.toString(),
           where: '${MetaModel.id} = ?',
           whereArgs: [model.id],
         ),
