@@ -1,7 +1,6 @@
 import 'package:model/model.dart';
 
 // Create models Author and Book by extending Model class.
-//
 
 class Author extends Model {
   static const table = 'author';
@@ -16,6 +15,11 @@ class Author extends Model {
 
   @override
   Map<String, dynamic> toMapForDB() => {nameCol: name};
+
+  @override
+  void buildFromDB(Map<String, dynamic> map) {
+    name = map[nameCol] as String;
+  }
 }
 
 class Book extends Model {
@@ -51,6 +55,15 @@ class Book extends Model {
         numberOfPagesCol: numberOfPages,
         authorIdCol: authorId,
       };
+
+  @override
+  void buildFromDB(Map<String, dynamic> map) {
+    title = map[titleCol] as String;
+    description = map[descriptionCol] as String;
+    price = map[priceCol] as double;
+    numberOfPages = map[numberOfPagesCol] as int;
+    authorId = map[authorIdCol] as int;
+  }
 }
 
 // Extend DBProvider class to provide database.
