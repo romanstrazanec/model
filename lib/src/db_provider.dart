@@ -87,6 +87,29 @@ abstract class DBProvider {
     }
   }
 
+  static Future<Model> fetch(Model model, [int id]) async {
+    final table = _tableName(model);
+    id ??= model.id;
+    final map = await _db.transaction(
+      (txn) => txn.query(
+        table,
+        where: '${MetaModel.id} = ?',
+        whereArgs: [id],
+        limit: 1,
+      ),
+    );
+    if (map.isNotEmpty) {
+      model.buildFromDB(map.first);
+      if (id != null) {
+        model.id = id;
+      }
+      return model;
+    }
+
+    throw IndexError(
+        id, map, table, 'Unable to find entry in $table table with index $id.');
+  }
+
   /// Print all tables in database.
   void printTables() async {
     for (final table in tables.keys) {

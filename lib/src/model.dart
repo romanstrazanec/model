@@ -7,12 +7,6 @@ abstract class MetaModel {
 abstract class Model {
   int id;
 
-  Model();
-
-  Model.fromDB(Map<String, dynamic> map) {
-    buildFromDB(map);
-  }
-
   void buildFromDB(Map<String, dynamic> map);
 
   Map<String, dynamic> toMapForDB();
@@ -23,5 +17,9 @@ abstract class Model {
 
   Future<void> delete() async {
     DBProvider.delete(this);
+  }
+
+  Future<Model> fetch([int id]) async {
+    DBProvider.fetch(this, id ?? this.id);
   }
 }
