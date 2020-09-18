@@ -1,3 +1,7 @@
+## [0.0.4] - 2020/09/18
+
+- merging models from database
+
 ## [0.0.3] - 2020/06/13
 
 - example
