@@ -1,3 +1,4 @@
+import '../model.dart';
 import 'db_provider.dart';
 
 /// Holds column names.
@@ -18,6 +19,8 @@ abstract class Model {
   /// Implement this method to save values in database.
   Map<String, dynamic> toMapForDB();
 
+  void constructFromDB(Map<String, dynamic> row);
+
   /// Save model.
   Future<void> save() {
     return DBProvider.save(this);
@@ -26,5 +29,10 @@ abstract class Model {
   /// Delete model.
   Future<void> delete() async {
     DBProvider.delete(this);
+  }
+
+  /// Merge model.
+  Future<void> merge() async {
+    DBProvider.merge(this);
   }
 }

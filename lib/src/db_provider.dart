@@ -87,6 +87,24 @@ abstract class DBProvider {
     }
   }
 
+  /// Merges model from database.
+  static Future<void> merge(Model model) async {
+    if (model.id != null) {
+      final result = await _db.transaction(
+            (txn) => txn.query(
+          model.tableName,
+          distinct: true,
+          where: '${MetaModel.id} = ?',
+          whereArgs: [model.id],
+          limit: 1,
+        ),
+      );
+      if (result.isNotEmpty) {
+        model.constructFromDB(result.first);
+      }
+    }
+  }
+
   /// Print all tables in database.
   void printTables() async {
     for (final table in tables.keys) {

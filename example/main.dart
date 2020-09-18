@@ -1,7 +1,6 @@
 import 'package:model/model.dart';
 
 // Create models Author and Book by extending Model class.
-//
 
 class Author extends Model {
   static const table = 'author';
@@ -16,6 +15,11 @@ class Author extends Model {
 
   @override
   Map<String, dynamic> toMapForDB() => {nameCol: name};
+
+  @override
+  void constructFromDB(Map<String, dynamic> row) {
+    name = row[nameCol] as String;
+  }
 }
 
 class Book extends Model {
@@ -51,6 +55,15 @@ class Book extends Model {
         numberOfPagesCol: numberOfPages,
         authorIdCol: authorId,
       };
+
+  @override
+  void constructFromDB(Map<String, dynamic> row) {
+    title = row[titleCol] as String;
+    description = row[descriptionCol] as String;
+    price = row[priceCol] as double;
+    numberOfPages = row[numberOfPagesCol] as int;
+    authorId = row[authorIdCol] as int;
+  }
 }
 
 // Extend DBProvider class to provide database.
@@ -89,11 +102,19 @@ class MyDBProvider extends DBProvider {
 // Main method shows the use of the provider together with the models.
 
 void main() async {
+  // Open the database.
   final dbProvider = await MyDBProvider().open();
 
+  // Create and save new author.
   final author = Author(name: 'foo');
   await author.save();
 
+  final mergedAuthor = Author()..id = author.id..merge();
+  print('Merged author: ${mergedAuthor.name}');
+  print('Author: ${author.name}');
+  print('Author are same: ${mergedAuthor.name == author.name}');
+
+  // Create and save new book.
   final book = Book(
     title: 'bar',
     description: 'foo bar',
@@ -105,6 +126,7 @@ void main() async {
   // Print tables.
   dbProvider.printTables();
 
+  // Remove book from the database.
   book.delete();
 
   // Book should no longer exist.
