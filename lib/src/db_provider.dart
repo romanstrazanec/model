@@ -26,7 +26,12 @@ abstract class DBProvider {
     final dbPath = await getDatabasesPath();
     _db ??= await openDatabase(
       // Open only if _db null.
-      join(dbPath, describer.name, '.db'),
+      join(
+        dbPath,
+        describer.name.endsWith('.db')
+            ? describer.name
+            : describer.name + '.db',
+      ),
       version: describer.version,
       onCreate: (db, _) async {
         await db.execute('PRAGMA foreign_keys = ON');
