@@ -160,12 +160,12 @@ abstract class DBProvider {
       }
     }
 
-    db.execute('$sql);').catchError((_) {});
+    db.execute('$sql);').catchError(print);
   }
 
   /// Drops table.
   static void _dropTable(Database db, String table) async {
-    db.execute('DROP TABLE $table;').catchError((_) {});
+    db.execute('DROP TABLE $table;').catchError(print);
   }
 
   /// SQL in operator.
