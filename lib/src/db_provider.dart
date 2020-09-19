@@ -90,19 +90,41 @@ abstract class DBProvider {
   /// Merges model from database.
   static Future<void> merge(Model model) async {
     if (model.id != null) {
-      final result = await _db.transaction(
-            (txn) => txn.query(
-          model.tableName,
-          distinct: true,
-          where: '${MetaModel.id} = ?',
-          whereArgs: [model.id],
-          limit: 1,
-        ),
-      );
+      final result = await fetch(model.tableName, id: model.id);
       if (result.isNotEmpty) {
         model.constructFromDB(result.first);
       }
     }
+  }
+
+  /// Fetch rows in given [table] either for specific [id] and [ids] or all.
+  static Future<List<Map<String, dynamic>>> fetch(
+    String table, {
+    Set<int> ids,
+    int id,
+  }) async {
+    return _db.transaction(
+      (txn) {
+        if (ids != null) {
+          if (id != null) ids.add(id);
+          return txn.query(
+            table,
+            where: columnIn(MetaModel.id, ids),
+            whereArgs: ids.toList(growable: false),
+            limit: ids.length,
+          );
+        }
+
+        return id != null
+            ? txn.query(
+                table,
+                where: '${MetaModel.id} = ?',
+                whereArgs: <int>[id],
+                limit: 1,
+              )
+            : txn.query(table);
+      },
+    );
   }
 
   /// Print all tables in database.
@@ -145,6 +167,6 @@ abstract class DBProvider {
   }
 
   /// SQL in operator.
-  static String columnIn(String column, List values) =>
+  static String columnIn(String column, Set values) =>
       '$column IN (${values.map((_) => '?').join(', ')})';
 }
