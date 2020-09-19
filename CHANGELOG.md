@@ -1,3 +1,7 @@
+## [0.0.5] - 2020/09/19
+
+- fetching by ids
+
 ## [0.0.4] - 2020/09/18
 
 - merging models from database
