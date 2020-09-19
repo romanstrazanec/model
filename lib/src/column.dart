@@ -10,7 +10,13 @@ class Column {
   final SQLiteType type;
 
   /// Additional constraints.
-  final List<Constraint> constraints;
+  final Set<Constraint> constraints;
 
   const Column(this.name, this.type, [this.constraints]);
+
+  @override
+  bool operator ==(Object other) => other is Column && other.name == name;
+
+  @override
+  int get hashCode => name.hashCode;
 }

@@ -8,3 +8,4 @@ export 'src/db_describer.dart';
 export 'src/db_provider.dart';
 export 'src/model.dart';
 export 'src/sqlite_type.dart';
+export 'src/table.dart';

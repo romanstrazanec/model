@@ -30,7 +30,7 @@ abstract class DBProvider {
       version: describer.version,
       onCreate: (db, _) async {
         await db.execute('PRAGMA foreign_keys = ON');
-        describer.tables.forEach((name, cols) => _createTable(db, name, cols));
+        describer.tables.forEach((t) => _createTable(db, t.name, t.columns));
       },
       onUpgrade: _onVersionChange,
       onDowngrade: _onVersionChange,
@@ -41,9 +41,9 @@ abstract class DBProvider {
 
   /// This method runs on database version change.
   void _onVersionChange(Database db, int oldVersion, int newVersion) {
-    describer.tables.forEach((name, cols) {
-      _dropTable(db, name);
-      _createTable(db, name, cols);
+    describer.tables.forEach((t) {
+      _dropTable(db, t.name);
+      _createTable(db, t.name, t.columns);
     });
   }
 
@@ -125,8 +125,8 @@ abstract class DBProvider {
 
   /// Print all tables in database.
   void printTables() async {
-    for (final table in describer.tables.keys) {
-      await printTable(table);
+    for (final table in describer.tables) {
+      await printTable(table.name);
     }
   }
 
@@ -141,7 +141,7 @@ abstract class DBProvider {
   static void _createTable(
     Database db,
     String table,
-    List<Column> columns,
+    Set<Column> columns,
   ) async {
     var sql = 'CREATE TABLE $table (${MetaModel.id} INTEGER PRIMARY KEY';
 

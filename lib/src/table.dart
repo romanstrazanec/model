@@ -6,7 +6,13 @@ class Table {
   final String name;
 
   /// Columns.
-  final List<Column> columns;
+  final Set<Column> columns;
 
-  const Table(this.name, this.columns);
+  const Table({this.name, this.columns});
+
+  @override
+  bool operator ==(Object other) => other is Table && other.name == name;
+
+  @override
+  int get hashCode => name.hashCode;
 }

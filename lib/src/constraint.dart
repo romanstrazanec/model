@@ -3,6 +3,12 @@ import 'model.dart';
 /// Column constraint.
 abstract class Constraint {
   const Constraint();
+
+  @override
+  bool operator ==(Object other) => hashCode == other.hashCode;
+
+  @override
+  int get hashCode => toString().hashCode;
 }
 
 /// Set default value to column.

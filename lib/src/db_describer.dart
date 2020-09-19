@@ -1,4 +1,4 @@
-import 'column.dart';
+import 'table.dart';
 
 /// Describes the database.
 class DatabaseDescriber {
@@ -9,18 +9,22 @@ class DatabaseDescriber {
   final int version;
 
   /// Database tables.
-  final Map<String, List<Column>> tables;
+  final Set<Table> tables;
 
-  DatabaseDescriber({this.name, this.version, this.tables}) {
-    if (name == null || version == null || tables == null)
-      throw ArgumentError('Database describer fields cannot be null.');
-    if (version < 0) throw ArgumentError('Version cannot be negative.');
-  }
+  const DatabaseDescriber({this.name, this.version, this.tables});
+
+  // DatabaseDescriber({this.name, this.version, this.tables}) {
+  //   if (name == null || version == null || tables == null)
+  //     throw ArgumentError('Database describer fields cannot be null.');
+  //   if (version < 0) throw ArgumentError('Version cannot be negative.');
+  // }
 
   @override
-  bool operator ==(Object other) {
-    return other is DatabaseDescriber &&
-        other.name == name &&
-        other.version == version;
-  }
+  bool operator ==(Object other) =>
+      other is DatabaseDescriber &&
+      other.name == name &&
+      other.version == version;
+
+  @override
+  int get hashCode => name.hashCode * version.hashCode;
 }
