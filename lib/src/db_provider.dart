@@ -3,20 +3,14 @@ import 'package:sqflite/sqflite.dart';
 
 import 'column.dart';
 import 'model.dart';
+import 'db_describer.dart';
 
 /// Provides database.
 abstract class DBProvider {
   /// Database.
   static Database _db;
 
-  /// Implement this getter to set the database name.
-  String get databaseName;
-
-  /// Implement this getter to set the database version.
-  int get databaseVersion;
-
-  /// Implement this getter to provide the structure of the database.
-  Map<String, List<Column>> get tables;
+  DatabaseDescriber get describer;
 
   /// Returns transaction from database.
   static Future<T> Function<T>(
@@ -32,11 +26,11 @@ abstract class DBProvider {
     final dbPath = await getDatabasesPath();
     _db ??= await openDatabase(
       // Open only if _db null.
-      join(dbPath, databaseName, '.db'),
-      version: databaseVersion,
+      join(dbPath, describer.name, '.db'),
+      version: describer.version,
       onCreate: (db, _) async {
         await db.execute('PRAGMA foreign_keys = ON');
-        tables.forEach((name, cols) => _createTable(db, name, cols));
+        describer.tables.forEach((name, cols) => _createTable(db, name, cols));
       },
       onUpgrade: _onVersionChange,
       onDowngrade: _onVersionChange,
@@ -47,7 +41,7 @@ abstract class DBProvider {
 
   /// This method runs on database version change.
   void _onVersionChange(Database db, int oldVersion, int newVersion) {
-    tables.forEach((name, cols) {
+    describer.tables.forEach((name, cols) {
       _dropTable(db, name);
       _createTable(db, name, cols);
     });
@@ -131,7 +125,7 @@ abstract class DBProvider {
 
   /// Print all tables in database.
   void printTables() async {
-    for (final table in tables.keys) {
+    for (final table in describer.tables.keys) {
       await printTable(table);
     }
   }
