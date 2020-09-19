@@ -19,8 +19,10 @@ abstract class DBProvider {
   Map<String, List<Column>> get tables;
 
   /// Returns transaction from database.
-  static Future<T> Function<T>(Future<T> Function(Transaction),
-      {bool exclusive}) get transaction => _db.transaction;
+  static Future<T> Function<T>(
+    Future<T> Function(Transaction), {
+    bool exclusive,
+  }) get transaction => _db.transaction;
 
   /// Returns database batch.
   static Batch get batch => _db.batch();
@@ -54,7 +56,7 @@ abstract class DBProvider {
   /// Saves the model.
   static Future<void> save(Model model) async {
     if (model.id == null) {
-      model.id = await _db.transaction(
+      model.id = await transaction(
         (txn) => txn.insert(
           model.tableName,
           model.toMapForDB(),
@@ -63,7 +65,7 @@ abstract class DBProvider {
       );
     } else {
       // model.id != null means it is already in database.
-      _db.transaction(
+      transaction(
         (txn) => txn.update(
           model.tableName,
           model.toMapForDB(),
@@ -76,7 +78,7 @@ abstract class DBProvider {
   /// Deletes model from database.
   static Future<void> delete(Model model) async {
     if (model.id != null) {
-      await _db.transaction(
+      await transaction(
         (txn) => txn.delete(
           model.tableName,
           where: '${MetaModel.id} = ?',
@@ -103,7 +105,7 @@ abstract class DBProvider {
     Set<int> ids,
     int id,
   }) async {
-    return _db.transaction(
+    return transaction(
       (txn) {
         if (ids != null) {
           if (id != null) ids.add(id);
@@ -137,7 +139,7 @@ abstract class DBProvider {
   /// Print table in database.
   static Future<void> printTable(String table) async {
     print('\n${table.toUpperCase()}:');
-    (await _db.transaction((txn) => txn.query(table))).forEach(print);
+    (await transaction((txn) => txn.query(table))).forEach(print);
   }
 
   /// Executes SQL query to create table with [table] in [db] database.
