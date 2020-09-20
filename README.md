@@ -9,7 +9,7 @@ In your flutter project add the dependency:
 ```yml
 dependencies:
   ...
-  model: ^0.1.0+2
+  model: ^0.1.1
 ```
 
 For help to get started with Flutter, view the online

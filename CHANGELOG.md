@@ -1,3 +1,7 @@
+## [0.1.1] - 2020/09/20
+
+- fetch where
+
 ## [0.1.0+2] - 2020/09/19
 
 - *FIX*: default column constraints

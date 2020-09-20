@@ -103,6 +103,8 @@ abstract class DBProvider {
     String table, {
     Set<int> ids,
     int id,
+    String where,
+    List whereArgs,
   }) async {
     return transaction(
       (txn) {
@@ -123,7 +125,7 @@ abstract class DBProvider {
                 whereArgs: <int>[id],
                 limit: 1,
               )
-            : txn.query(table);
+            : txn.query(table, where: where, whereArgs: whereArgs);
       },
     );
   }
