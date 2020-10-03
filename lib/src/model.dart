@@ -35,4 +35,11 @@ abstract class Model {
   Future<void> merge() async {
     DBProvider.merge(this);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      other is Model && (id ?? -1) == other.id;
+
+  @override
+  int get hashCode => super.hashCode * (id?.hashCode ?? 1);
 }
