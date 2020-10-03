@@ -1,3 +1,8 @@
+## [0.1.2] - 2020/09/20
+
+- model id setter (cannot be less than 1)
+- model hashCode and equals
+
 ## [0.1.1] - 2020/09/20
 
 - fetch where
