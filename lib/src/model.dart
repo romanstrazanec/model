@@ -29,19 +29,13 @@ abstract class Model {
   void constructFromDB(Map<String, dynamic> row);
 
   /// Save model.
-  Future<void> save() {
-    return DBProvider.save(this);
-  }
+  Future<void> save() => DBProvider.save(this);
 
   /// Delete model.
-  Future<void> delete() async {
-    DBProvider.delete(this);
-  }
+  Future<void> delete() async => DBProvider.delete(this);
 
   /// Merge model.
-  Future<void> merge() async {
-    DBProvider.merge(this);
-  }
+  Future<void> merge() async => DBProvider.merge(this);
 
   @override
   bool operator ==(Object other) => other is Model && (id ?? -1) == other.id;
