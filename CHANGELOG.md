@@ -1,4 +1,9 @@
-## [0.1.2] - 2020/09/20
+## [0.1.3] - 2020/10/03
+
+- tableName from runtimeType
+- model toString
+
+## [0.1.2] - 2020/10/02
 
 - model id setter (cannot be less than 1)
 - model hashCode and equals
