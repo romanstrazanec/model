@@ -48,4 +48,7 @@ abstract class Model {
 
   @override
   int get hashCode => super.hashCode * (id?.hashCode ?? 1);
+
+  @override
+  String toString() => '$tableName:$id';
 }
