@@ -23,15 +23,9 @@ abstract class DBProvider {
 
   /// Opens a database. Returns future expecting this provider.
   Future<DBProvider> open() async {
-    final dbPath = await getDatabasesPath();
     _db ??= await openDatabase(
       // Open only if _db null.
-      join(
-        dbPath,
-        describer.name.endsWith('.db')
-            ? describer.name
-            : describer.name + '.db',
-      ),
+      await _dbPath,
       version: describer.version,
       onCreate: (db, _) async {
         await db.execute('PRAGMA foreign_keys = ON');
@@ -43,6 +37,14 @@ abstract class DBProvider {
     assert(_db != null);
     return this;
   }
+
+  /// Gets path to the database.
+  Future<String> get _dbPath async => join(
+        await getDatabasesPath(),
+        describer.name.endsWith('.db')
+            ? describer.name
+            : describer.name + '.db',
+      );
 
   /// This method runs on database version change.
   void _onVersionChange(Database db, int oldVersion, int newVersion) {
