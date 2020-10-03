@@ -12,7 +12,14 @@ abstract class Model {
   String get tableName;
 
   /// Primary key.
-  int id;
+  int _id;
+
+  int get id => _id;
+
+  set id(int id) {
+    if (id < 1) throw ArgumentError('Id cannot be less than 1.');
+    _id = id;
+  }
 
   Model();
 
@@ -37,8 +44,7 @@ abstract class Model {
   }
 
   @override
-  bool operator ==(Object other) =>
-      other is Model && (id ?? -1) == other.id;
+  bool operator ==(Object other) => other is Model && (id ?? -1) == other.id;
 
   @override
   int get hashCode => super.hashCode * (id?.hashCode ?? 1);
