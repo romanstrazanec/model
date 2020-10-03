@@ -3,11 +3,7 @@ import 'package:model/model.dart';
 // Create models Author and Book by extending Model class.
 
 class Author extends Model {
-  static const table = 'author';
   static const nameCol = 'name';
-
-  @override
-  String get tableName => table;
 
   String name;
 
@@ -23,15 +19,11 @@ class Author extends Model {
 }
 
 class Book extends Model {
-  static const table = 'book';
   static const titleCol = 'title';
   static const descriptionCol = 'description';
   static const priceCol = 'price';
   static const numberOfPagesCol = 'number_of_pages';
   static const authorIdCol = 'author_id';
-
-  @override
-  String get tableName => table;
 
   String title;
   String description;
@@ -75,7 +67,7 @@ class MyDBProvider extends DBProvider {
         version: 1,
         tables: <Table>{
           Table(
-            name: Book.table,
+            name: Book().tableName,
             columns: <Column>{
               Column(Book.titleCol, SQLiteType.text, <Constraint>{
                 Unique(),
@@ -86,12 +78,12 @@ class MyDBProvider extends DBProvider {
               Column(Book.priceCol, SQLiteType.real),
               Column(Book.numberOfPagesCol, SQLiteType.integer),
               Column(Book.authorIdCol, SQLiteType.integer, <Constraint>{
-                References(Author.table),
+                References(Author().tableName),
               })
             },
           ),
           Table(
-            name: Author.table,
+            name: Author().tableName,
             columns: <Column>{
               Column(Author.nameCol, SQLiteType.text, <Constraint>{
                 Unique(),

@@ -9,7 +9,7 @@ abstract class MetaModel {
 /// Model of a row in database.
 abstract class Model {
   /// Implement to get table name.
-  String get tableName;
+  String get tableName => runtimeType.toString().toLowerCase();
 
   /// Primary key.
   int _id;
