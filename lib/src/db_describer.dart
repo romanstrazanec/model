@@ -11,7 +11,7 @@ class DatabaseDescriber {
   /// Database tables.
   final Set<Table> tables;
 
-  const DatabaseDescriber({this.name, this.version, this.tables});
+  const DatabaseDescriber(this.name, this.version, this.tables);
 
   // DatabaseDescriber({this.name, this.version, this.tables}) {
   //   if (name == null || version == null || tables == null)

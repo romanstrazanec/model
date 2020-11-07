@@ -8,7 +8,7 @@ import 'db_describer.dart';
 /// Provides database.
 abstract class DBProvider {
   /// Database.
-  static Database _db;
+  static Database? _db;
 
   DatabaseDescriber get describer;
 
@@ -16,10 +16,10 @@ abstract class DBProvider {
   static Future<T> Function<T>(
     Future<T> Function(Transaction), {
     bool exclusive,
-  }) get transaction => _db.transaction;
+  })? get transaction => _db?.transaction;
 
   /// Returns database batch.
-  static Batch get batch => _db.batch();
+  static Batch? get batch => _db?.batch();
 
   /// Opens a database. Returns future expecting this provider.
   Future<DBProvider> open() async {
@@ -57,7 +57,7 @@ abstract class DBProvider {
   /// Saves the model.
   static Future<void> save(Model model) async {
     if (model.id == null) {
-      model.id = await transaction(
+      model.id = await transaction!(
         (txn) => txn.insert(
           model.tableName,
           model.toMapForDB(),
@@ -66,7 +66,7 @@ abstract class DBProvider {
       );
     } else {
       // model.id != null means it is already in database.
-      transaction(
+      transaction!(
         (txn) => txn.update(
           model.tableName,
           model.toMapForDB(),
@@ -79,7 +79,7 @@ abstract class DBProvider {
   /// Deletes model from database.
   static Future<void> delete(Model model) async {
     if (model.id != null) {
-      await transaction(
+      await transaction!(
         (txn) => txn.delete(
           model.tableName,
           where: '${MetaModel.id} = ?',
@@ -103,12 +103,12 @@ abstract class DBProvider {
   /// Fetch rows in given [table] either for specific [id] and [ids] or all.
   static Future<List<Map<String, dynamic>>> fetch(
     String table, {
-    Set<int> ids,
-    int id,
-    String where,
-    List whereArgs,
+    Set<int>? ids,
+    int? id,
+    String? where,
+    List? whereArgs,
   }) async {
-    return transaction(
+    return transaction!(
       (txn) {
         if (ids != null) {
           if (id != null) ids.add(id);
@@ -142,7 +142,7 @@ abstract class DBProvider {
   /// Print table in database.
   static Future<void> printTable(String table) async {
     print('\n${table.toUpperCase()}:');
-    (await transaction((txn) => txn.query(table))).forEach(print);
+    (await transaction!((txn) => txn.query(table))).forEach(print);
   }
 
   /// Executes SQL query to create table with [table] in [db] database.

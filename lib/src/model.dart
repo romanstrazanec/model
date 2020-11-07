@@ -12,12 +12,12 @@ abstract class Model {
   String get tableName => runtimeType.toString().toLowerCase();
 
   /// Primary key.
-  int _id;
+  int? _id;
 
-  int get id => _id;
+  int? get id => _id;
 
-  set id(int id) {
-    if (id < 1) throw ArgumentError('Id cannot be less than 1.');
+  set id(int? id) {
+    if (id != null && id < 1) throw ArgumentError('Id cannot be less than 1.');
     _id = id;
   }
 

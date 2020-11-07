@@ -63,12 +63,12 @@ class Book extends Model {
 class MyDBProvider extends DBProvider {
   @override
   DatabaseDescriber get describer => DatabaseDescriber(
-        name: 'books',
-        version: 1,
-        tables: <Table>{
+        'books', // name
+        1, // version
+        <Table>{ // tables
           Table(
-            name: Book().tableName,
-            columns: <Column>{
+            Book().tableName,
+            <Column>{
               Column(Book.titleCol, SQLiteType.text, <Constraint>{
                 Unique(),
                 NotNull(),
@@ -83,8 +83,8 @@ class MyDBProvider extends DBProvider {
             },
           ),
           Table(
-            name: Author().tableName,
-            columns: <Column>{
+            Author().tableName,
+            <Column>{
               Column(Author.nameCol, SQLiteType.text, <Constraint>{
                 Unique(),
                 NotNull(),

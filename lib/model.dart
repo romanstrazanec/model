@@ -1,6 +1,6 @@
 library model;
 
-export 'package:sqflite/sqflite.dart';
+// export 'package:sqflite/sqflite.dart';
 
 export 'src/column.dart';
 export 'src/constraint.dart';

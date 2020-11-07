@@ -5,6 +5,9 @@ analyzer:
     implicit-casts: false
     implicit-dynamic: true
 
+  enable-experiment:
+    - non-nullable
+
   errors:
     todo: ignore
     dead_code: error
