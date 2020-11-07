@@ -7,7 +7,7 @@ class Author extends Model {
 
   String name;
 
-  Author({this.name});
+  Author({this.name = ""});
 
   @override
   Map<String, dynamic> toMapForDB() => {nameCol: name};
@@ -26,13 +26,13 @@ class Book extends Model {
   static const authorIdCol = 'author_id';
 
   String title;
-  String description;
-  double price;
-  int numberOfPages;
-  int authorId;
+  String? description;
+  double? price;
+  int? numberOfPages;
+  int? authorId;
 
   Book({
-    this.title,
+    this.title = "",
     this.description,
     this.price,
     this.numberOfPages,
