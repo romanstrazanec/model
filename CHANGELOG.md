@@ -1,3 +1,7 @@
+## [0.1.3.nullsafety.1] - 2020/11/07
+
+- enable null-safety experimental features
+
 ## [0.1.3] - 2020/10/03
 
 - tableName from runtimeType
