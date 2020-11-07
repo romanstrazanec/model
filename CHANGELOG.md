@@ -1,4 +1,4 @@
-## [0.1.3.nullsafety.1] - 2020/11/07
+## [0.1.3-nullsafety.1] - 2020/11/07
 
 - enable null-safety experimental features
 
